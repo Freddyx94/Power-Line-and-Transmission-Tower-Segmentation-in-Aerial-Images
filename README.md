@@ -235,7 +235,7 @@ Final test set results (186 held-out images never seen during training), ranked 
 | Name | Matriculation Number |
 |------|----------------------|
 | DAVID JOYSON AKKARAPATY | [90159624.] |
-| OPEYEMI SAMUEL KOLADE | [Matric No.] |
+| OPEYEMI SAMUEL KOLADE | [50029037] |
 | SAHEED YAKUBU | [59117739.] |
 
 **Course:** MACHINE LEARNING  
