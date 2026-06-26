@@ -1,0 +1,139 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Power Line and Transmission Tower Segmentation in Aerial Images
+# Requirements and Execution Guide
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+# ── 1. DEPENDENCIES ──────────────────────────────────────────────────────────
+# Install all dependencies with:
+#     pip install -r requirements.txt
+
+# Core deep learning
+torch>=1.13.0
+torchvision>=0.14.0
+
+# Segmentation model
+segmentation-models-pytorch>=0.3.0
+
+# Image processing
+Pillow>=9.0.0
+
+# Data and visualisation
+numpy>=1.23.0
+matplotlib>=3.6.0
+pandas>=1.5.0
+
+# Notebook
+nbformat>=5.7.0
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ── 2. FULL PIPELINE — TERMINAL COMMANDS (in order) ──────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# NOTE: All commands below were run using Python 3.10 on Windows (CPU only).
+#       Replace "py -3.10" with "python3" on Mac/Linux.
+#       All scripts expect the dataset to be downloaded from:
+#       https://github.com/r3ab/ttpla_dataset
+#
+#
+# ── STEP 1: Convert LabelMe JSON annotations to binary PNG masks ──────────────
+#
+#     py -3.10 convert_masks.py
+#
+#   Input  : data_original_size/ (images + .json annotation files)
+#   Output : masks/              (binary .png masks, one per image)
+#
+#
+# ── STEP 2: Explore the dataset and verify mask quality ──────────────────────
+#
+#     py -3.10 explore_dataset.py
+#
+#   Output : exploration_results/
+#              sample_overlays.png       (visual overlay of masks on images)
+#              class_distribution.png   (pie chart of class imbalance)
+#   Key result: 2.18% foreground, 97.82% background, 44.9:1 ratio
+#
+#
+# ── STEP 3: Split dataset into train / val / test sets ───────────────────────
+#
+#     py -3.10 split_dataset.py
+#
+#   Output : splits/
+#              train.txt   (869 images, 70%)
+#              val.txt     (186 images, 15%)
+#              test.txt    (186 images, 15%)
+#   Random seed: 42 (fixed for reproducibility)
+#
+#
+# ── STEP 4: Train the model with each loss function (run one at a time) ───────
+#
+#   All 5 commands below use the same U-Net + ResNet-34 architecture.
+#   Only the loss function changes between runs.
+#   Each run saves: best_model.pth and training_log.csv
+#   Training time: ~24 hours per run on CPU
+#
+#     py -3.10 train.py --loss bce
+#     py -3.10 train.py --loss weighted_bce
+#     py -3.10 train.py --loss focal
+#     py -3.10 train.py --loss dice
+#     py -3.10 train.py --loss tversky
+#
+#   Output : results/
+#              run_bce/          best_model.pth, training_log.csv
+#              run_weighted_bce/ best_model.pth, training_log.csv
+#              run_focal/        best_model.pth, training_log.csv
+#              run_dice/         best_model.pth, training_log.csv
+#              run_tversky/      best_model.pth, training_log.csv
+#
+#   To run all 5 sequentially in one command (PowerShell):
+#     py -3.10 train.py --loss bce; py -3.10 train.py --loss weighted_bce; py -3.10 train.py --loss focal; py -3.10 train.py --loss dice; py -3.10 train.py --loss tversky
+#
+#
+# ── STEP 5: Evaluate all models on the held-out test set ─────────────────────
+#
+#     py -3.10 evaluate.py
+#
+#   Input  : results/run_*/best_model.pth  (all 5 trained models)
+#   Output : results/test_set_comparison.csv
+#   Key result: Dice Loss achieved the best IoU (0.674) and F1 (0.798)
+#
+#
+# ── STEP 6: Generate all visualisation figures ────────────────────────────────
+#
+#     py -3.10 visualize_results.py
+#
+#   Output : thesis_figures/
+#              01_training_curve_bce.png
+#              01_training_curve_weighted_bce.png
+#              01_training_curve_focal.png
+#              01_training_curve_dice.png
+#              01_training_curve_tversky.png
+#              02_combined_training_curves.png
+#              03_test_metrics_bar_chart.png
+#              04_radar_chart.png
+#              05_precision_recall_scatter.png
+#              06_metric_heatmap.png
+#              07_qualitative_predictions.png
+#
+#
+# ── STEP 7: Run the presentation notebook ────────────────────────────────────
+#
+#   Open Power_Line_Segmentation_Presentation.ipynb in Jupyter or VS Code.
+#   Ensure the ./data/ folder is set up as described in the notebook.
+#   Run all cells from top to bottom.
+#
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# ── 3. FINAL TEST SET RESULTS SUMMARY ────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+#
+#   Rank  Loss Function    IoU     F1      Precision  Recall
+#   ────  ─────────────    ─────   ─────   ─────────  ──────
+#   1     Dice             0.674   0.798   0.807      0.803
+#   2     Tversky          0.659   0.786   0.738      0.857
+#   3     BCE (baseline)   0.644   0.774   0.827      0.743
+#   4     Focal            0.611   0.746   0.884      0.662
+#   5     Weighted BCE     0.431   0.585   0.435      0.971
+#
+# ─────────────────────────────────────────────────────────────────────────────
