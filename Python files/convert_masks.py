@@ -1,7 +1,7 @@
 """
 TTPLA Dataset - Convert LabelMe JSON annotations to binary segmentation masks.
 For each image, this script creates a corresponding .png mask where:
-  - Pixel = 255 (white) → cable or tower (foreground)
+  - Pixel = 255 (white) → cable (foreground)
   - Pixel = 0   (black) → background
 """
 
@@ -16,8 +16,8 @@ DATASET_DIR  = "./data_original_size"        # folder containing all .jpg and .j
 OUTPUT_DIR   = "./masks"          # folder where masks will be saved
 # ──────────────────────────────────────────────────────────────────────────────
 
-# Labels we want to segment (add "tower" if your dataset has it)
-TARGET_LABELS = {"cable", "tower"}
+# Labels we want to segment
+TARGET_LABELS = {"cable"}
 
 
 def convert_json_to_mask(json_path: str, output_dir: str) -> None:

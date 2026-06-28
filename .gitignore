@@ -1,0 +1,21 @@
+# Python bytecode cache
+__pycache__/
+*.pyc
+
+# Editor/tool config
+.claude/
+
+# Large model checkpoints (regenerate via ttpla_training/train.py)
+*.pth
+
+# Generated experiment artifacts (regenerate via train.py / evaluate.py / visualize_results.py)
+results_rerun30/
+results_rerun30_*.log
+results_with_towers/
+results_with_towers_*.log
+results_50ep_*.log
+Figures_rerun30/
+
+# OS-specific
+.DS_Store
+Thumbs.db

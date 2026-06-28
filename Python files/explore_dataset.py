@@ -111,7 +111,7 @@ def save_overlay_samples(pairs, num_samples):
         axes[i, 1].axis("off")
 
         axes[i, 2].imshow(overlay)
-        axes[i, 2].set_title("Overlay (red = cable/tower)", fontsize=9)
+        axes[i, 2].set_title("Overlay (red = cable)", fontsize=9)
         axes[i, 2].axis("off")
 
     plt.tight_layout()
@@ -125,7 +125,7 @@ def save_imbalance_chart(fg_pct, bg_pct):
     """Save a pie chart showing class distribution."""
     fig, ax = plt.subplots(figsize=(6, 6))
     sizes  = [fg_pct, bg_pct]
-    labels = [f"Foreground\n(cable/tower)\n{fg_pct:.2f}%",
+    labels = [f"Foreground\n(cable)\n{fg_pct:.2f}%",
               f"Background\n{bg_pct:.2f}%"]
     colors = ["#e74c3c", "#2ecc71"]
     ax.pie(sizes, labels=labels, colors=colors, autopct="%1.2f%%",

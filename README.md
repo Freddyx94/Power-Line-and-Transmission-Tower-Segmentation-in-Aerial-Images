@@ -20,9 +20,9 @@
 
 ## Project Overview
 
-This project addresses the problem of automatically detecting power lines and transmission towers in aerial drone imagery using semantic segmentation. Manual inspection of aerial footage is slow, costly, and error-prone. An automated segmentation system could flag cable and tower locations directly from images, reducing the need for human review.
+This project addresses the problem of automatically detecting power lines in aerial drone imagery using semantic segmentation. Manual inspection of aerial footage is slow, costly, and error-prone. An automated segmentation system could flag cable locations directly from images, reducing the need for human review.
 
-The core technical challenge is **class imbalance** — cable and tower pixels make up only **2.18%** of all pixels in the dataset, with a background-to-foreground ratio of **44.9:1**. Standard loss functions treat every pixel equally, causing models to ignore the rare foreground class entirely.
+The core technical challenge is **class imbalance** — cable pixels make up only **2.18%** of all pixels in the dataset, with a background-to-foreground ratio of **44.9:1**. Standard loss functions treat every pixel equally, causing models to ignore the rare foreground class entirely.
 
 This project trains a fixed model architecture (**U-Net with a pretrained ResNet-34 encoder**) five separate times — each time with a different loss function — and compares the results to identify which loss function best handles this severe imbalance.
 
@@ -30,7 +30,7 @@ This project trains a fixed model architecture (**U-Net with a pretrained ResNet
 
 ## Research Question
 
-> *Which loss function — Binary Cross-Entropy (BCE), Weighted BCE, Focal Loss, Dice Loss, or Tversky Loss — produces the most accurate segmentation of power lines and transmission towers under a 45:1 class imbalance?*
+> *Which loss function — Binary Cross-Entropy (BCE), Weighted BCE, Focal Loss, Dice Loss, or Tversky Loss — produces the most accurate segmentation of power lines under a 45:1 class imbalance?*
 
 ---
 
@@ -39,9 +39,9 @@ This project trains a fixed model architecture (**U-Net with a pretrained ResNet
 - **Name:** TTPLA — Transmission Towers and Power Lines Aerial Dataset
 - **Source:** [github.com/r3ab/ttpla_dataset](https://github.com/r3ab/ttpla_dataset)
 - **Size:** 1,242 aerial images with LabelMe-style polygon annotations
-- **Labels:** `cable`, `tower` (both treated as foreground in binary segmentation)
+- **Labels:** `cable` (treated as foreground in binary segmentation)
 - **Class imbalance:**
-  - Foreground (cable/tower): **2.18%** of pixels
+  - Foreground (cable): **2.18%** of pixels
   - Background: **97.82%** of pixels
   - Ratio: **44.9 : 1**
 - **Data split** (random seed = 42):
